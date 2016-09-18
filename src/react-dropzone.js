@@ -171,6 +171,36 @@ DropzoneComponent = React.createClass({
             return;
         }
 
+        this.dropzone.on('addedfile', (file) => {
+            if (file) {
+                var files = this.state.files;
+
+                if (!files) {
+                    files = [];
+                }
+
+                files.push(file);
+
+                this.setState({files: files});
+            }
+        });
+
+        this.dropzone.on('removedfile', (file) => {
+            if (file) {
+                var files = this.state.files;
+
+                if (files && files.length > 0) {
+                    for (var i = 0; i < files.length; i++) {
+                        if (files[i].name === file.name && files[i].size === file.size) {
+                            files.splice(i, 1);
+                        }
+                    }
+
+                    this.setState({files: files});
+                }
+            }
+        });
+
         for (var eventHandler in eventHandlers) {
             if (eventHandlers.hasOwnProperty(eventHandler) && eventHandlers[eventHandler]) {
                 // Check if there's an array of event handlers
@@ -192,36 +222,6 @@ DropzoneComponent = React.createClass({
                 }
             }
         }
-
-        this.dropzone.on('addedfile', (file) => {
-            if (file) {
-                var files = this.state.files;
-
-                if (!files) {
-                    files = [];
-                }
-
-                files.push(file)
-
-                this.setState({files: files});
-            }
-        });
-
-        this.dropzone.on('removedfile', (file) => {
-            if (file) {
-                var files = this.state.files;
-
-                if (files && files.length > 0) {
-                    for (var i = 0; i < files.length; i++) {
-                        if (files[i].name === file.name && files[i].size === file.size) {
-                            files.splice(i, 1);
-                        }
-                    }
-
-                    this.setState({files: files});
-                }
-            }
-        });
     },
 
     /**
